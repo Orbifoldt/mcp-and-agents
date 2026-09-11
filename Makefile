@@ -7,7 +7,7 @@ UV ?= uv
 help:
 	@echo "Available targets:"
 	@echo "  make app          Run the FastAPI application with reload enabled"
-	@echo "  make mcp          Run the MCP server"
+	@echo "  make mcp          Run the MCP server over HTTP on port 8001"
 	@echo "  make lint         Run Ruff linting"
 	@echo "  make format-check Check formatting with Ruff"
 	@echo "  make test         Run tests when tests/ exists"

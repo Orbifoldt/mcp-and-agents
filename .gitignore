@@ -222,3 +222,5 @@ __marimo__/
 /.idea/mcp-and-agents.iml
 /.idea/modules.xml
 /.idea/vcs.xml
+
+/.env

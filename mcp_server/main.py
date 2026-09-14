@@ -3,9 +3,13 @@ from fastmcp import FastMCP
 mcp = FastMCP()
 
 
-@mcp.tool
-def greet(name: str) -> str:
+@mcp.tool(version="1.0.0")
+def greet_v1(name: str) -> str:
     return f"Hello, {name}!"
+
+@mcp.tool(version="2.0.0")
+def greet_v2(name: str) -> str:
+    return f"Hello there, {name}!"
 
 
 async def main():

@@ -26,3 +26,15 @@ def get_openai_client() -> AzureOpenAI:
         api_version=settings.gpt_5_6_luna.api_version,
         azure_ad_token_provider=token_provider,
     )
+
+def simple_chat(system_message: str, user_message: str) -> str:
+    llm = get_openai_client()
+    settings = get_settings()
+    result = llm.chat.completions.create(
+        messages=[
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": user_message}
+        ],
+        model=settings.gpt_5_6_luna.deployment_name
+    )
+    return result.choices[0].message.content

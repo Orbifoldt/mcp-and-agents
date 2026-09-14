@@ -6,11 +6,19 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "azure-identity>=1.25.0",
+    "arize-phoenix-otel>=0.16.0",
     "fastapi>=0.141.1",
     "fastmcp>=4.0.3",
+    "langchain>=1.4.0",
+    "langchain-azure-ai>=1.2.3",
+    "langgraph>=1.2.11",
+    "langchain-openai>=1.6.2",
     "openai>=3.13.0",
+    "openinference-instrumentation-langchain>=0.1.67",
+    "openinference-instrumentation-openai>=0.1.60",
+    "opentelemetry-instrumentation-fastapi>=0.65b0",
     "pydantic-settings>=2.15.0",
-    "uvicorn>=0.52.4",
+    "uvicorn>=0.53.0",
 ]
 
 [dependency-groups]

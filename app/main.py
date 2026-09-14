@@ -1,9 +1,15 @@
 from fastapi import FastAPI
 
-from app.openai_client import simple_chat
-from common.settings import get_settings
+from app.observability import configure_observability
 
 app = FastAPI()
+configure_observability(app)
+
+from app.agent import agent_router
+from app.azure.openai_client import simple_chat
+from common.settings import get_settings
+
+app.include_router(agent_router)
 
 @app.get("/")
 async def read_root():

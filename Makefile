@@ -2,12 +2,15 @@ SHELL := /bin/sh
 
 UV ?= uv
 
-.PHONY: help app mcp lint format-check test check all
+.PHONY: help app mcp phoenix-up phoenix-down phoenix-logs lint format-check test check all
 
 help:
 	@echo "Available targets:"
 	@echo "  make app          Run the FastAPI application with reload enabled"
 	@echo "  make mcp          Run the MCP server over HTTP on port 8001"
+	@echo "  make phoenix-up   Start Phoenix with Docker Compose"
+	@echo "  make phoenix-down Stop Phoenix"
+	@echo "  make phoenix-logs Follow Phoenix logs"
 	@echo "  make lint         Run Ruff linting"
 	@echo "  make format-check Check formatting with Ruff"
 	@echo "  make test         Run tests when tests/ exists"
@@ -18,6 +21,15 @@ app:
 
 mcp:
 	$(UV) run python -m mcp_server.main
+
+phoenix-up:
+	docker compose up -d phoenix
+
+phoenix-down:
+	docker compose down
+
+phoenix-logs:
+	docker compose logs -f phoenix
 
 lint:
 	$(UV) run ruff check .

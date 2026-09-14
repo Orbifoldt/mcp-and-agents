@@ -29,6 +29,11 @@ class Settings(BaseSettings):
     azure_npa_client_secret: SecretStr
     gpt_5_6_luna: AzureLlmConfig = AzureLlmConfig()
 
+    # Telemetry
+    phoenix_enabled: bool = True
+    phoenix_collector_endpoint: str = "http://localhost:6006"
+    phoenix_project_name: str = "mcp-and-agents"
+
     model_config = SettingsConfigDict(
         env_file_encoding="utf-8",
         extra="ignore",

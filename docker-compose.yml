@@ -1,0 +1,14 @@
+services:
+  phoenix:
+    image: arizephoenix/phoenix:latest
+    ports:
+      - "6006:6006"
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - phoenix_data:/phoenix
+    environment:
+      PHOENIX_WORKING_DIR: /phoenix
+
+volumes:
+  phoenix_data:

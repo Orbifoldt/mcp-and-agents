@@ -1,7 +1,9 @@
 from fastmcp import FastMCP
 
-mcp = FastMCP()
+from mcp_server.math_tools import math_mcp
 
+mcp = FastMCP(on_duplicate="error")
+mcp.mount(math_mcp, namespace="math")
 
 @mcp.tool(version="1.0.0")
 def greet_v1(name: str) -> str:

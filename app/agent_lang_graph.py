@@ -2,6 +2,8 @@ from functools import lru_cache
 from typing import Any
 
 from fastapi import APIRouter
+from langchain.agents import create_agent
+from langchain.mcp import MCPAdapter
 from langchain.messages import HumanMessage, SystemMessage, ToolCall
 from langchain.tools import tool
 from langchain_core.messages import BaseMessage
@@ -13,7 +15,6 @@ from app.azure.auth import create_bearer_token_provider
 from common.settings import get_settings
 
 
-@lru_cache
 def get_chat_model() -> AzureChatOpenAI:
     settings = get_settings()
     model_config = settings.gpt_5_6_luna
@@ -61,7 +62,7 @@ def divide(a: int, b: int) -> float:
     return a / b
 
 
-agent_router = APIRouter(prefix="/agent", tags=["agent"])
+agent_router_lang_graph = APIRouter(prefix="/agent", tags=["agent"])
 
 
 model = get_chat_model()
@@ -69,14 +70,18 @@ tools = [add, multiply, divide]
 tools_by_name = {tool.name: tool for tool in tools}
 model_with_tools = model.bind_tools(tools)
 
+
 @task
 def call_llm(message: list[BaseMessage]):
-    return model_with_tools.invoke([
+    return model_with_tools.invoke(
+        [
             SystemMessage(
                 content="You are a helpful assistant tasked with performing arithmetic on a set of inputs. Answer in a nice english sentence, repeating the question in your own words and answering it in "
             )
         ]
-        + message)
+        + message
+    )
+
 
 @task
 def call_tool(tool_call: ToolCall):
@@ -87,22 +92,45 @@ def call_tool(tool_call: ToolCall):
 @entrypoint()
 def agent(messages: list[BaseMessage]):
     model_response = call_llm(messages).result()
-    
+
     while True:
         if not model_response.tool_calls:
             break
-            
+
         tool_futures = [call_tool(tool_call) for tool_call in model_response.tool_calls]
         tool_results = [future.result() for future in tool_futures]
         messages = add_messages(messages, [model_response, *tool_results])
         model_response = call_llm(messages).result()
-    
+
     messages = add_messages(messages, [model_response])
     return messages
 
-@agent_router.get("")
+
+@agent_router_lang_graph.get("")
 def try_agent(q: str) -> Any:
     stream = agent.stream_events([HumanMessage(content=q)], version="v3")
-    
+
     out = list(stream)
-    return out[-1]["params"]["data"][-1].content[0]["text"]  # Wow, such a nice dev experience
+    return out[-1]["params"]["data"][-1].content[0][
+        "text"
+    ]  # Wow, such a nice dev experience
+
+
+@agent_router_lang_graph.get("/mcp")
+async def try_mcp_agent(q: str) -> Any:
+    the_model = get_chat_model()
+    async with MCPAdapter("http://localhost:8001/mcp") as adapter:
+        mcp_tools = await adapter.list_tools()
+
+        agent_with_mcp = create_agent(
+            model=the_model,
+            tools=mcp_tools,
+        )
+
+        initial_msg = SystemMessage(
+            content="You are a helpful assistant tasked with performing arithmetic on a set of inputs. Answer in a nice english sentence, repeating the question in your own words and answering it in "
+        )
+        result = await agent_with_mcp.ainvoke(
+            {"messages": [initial_msg, HumanMessage(content=q)]}
+        )
+        return result

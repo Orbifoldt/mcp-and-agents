@@ -1191,6 +1191,11 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/92/fa/7da07d9977a5e292ef602c1bb911514ff8206e85dc09a66961874345d57a/langchain-1.4.0-py3-none-any.whl", hash = "sha256:af1dc0161d30944a52ec7844d9bf890d0497b12ec0703069f3503b4003cbbac3", size = 161534, upload-time = "2026-09-03T16:59:31.154Z" },
 ]
 
+[package.optional-dependencies]
+mcp = [
+    { name = "fastmcp" },
+]
+
 [[package]]
 name = "langchain-azure-ai"
 version = "1.2.3"
@@ -1392,7 +1397,7 @@ dependencies = [
     { name = "azure-identity" },
     { name = "fastapi" },
     { name = "fastmcp" },
-    { name = "langchain" },
+    { name = "langchain", extra = ["mcp"] },
     { name = "langchain-azure-ai" },
     { name = "langchain-openai" },
     { name = "langgraph" },
@@ -1415,7 +1420,7 @@ requires-dist = [
     { name = "azure-identity", specifier = ">=1.25.0" },
     { name = "fastapi", specifier = ">=0.141.1" },
     { name = "fastmcp", specifier = ">=4.0.3" },
-    { name = "langchain", specifier = ">=1.4.0" },
+    { name = "langchain", extras = ["mcp"], specifier = ">=1.4.0" },
     { name = "langchain-azure-ai", specifier = ">=1.2.3" },
     { name = "langchain-openai", specifier = ">=1.6.2" },
     { name = "langgraph", specifier = ">=1.2.11" },

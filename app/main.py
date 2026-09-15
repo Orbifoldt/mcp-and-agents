@@ -5,11 +5,11 @@ from app.observability import configure_observability
 app = FastAPI()
 configure_observability(app)
 
-from app.agent import agent_router
+from app.agent_lang_graph import agent_router_lang_graph
 from app.azure.openai_client import simple_chat
 from common.settings import get_settings
 
-app.include_router(agent_router)
+app.include_router(agent_router_lang_graph)
 
 @app.get("/")
 async def read_root():

@@ -19,6 +19,8 @@ dependencies = [
     "opentelemetry-instrumentation-fastapi>=0.65b0",
     "pydantic-settings>=2.15.0",
     "uvicorn>=0.53.0",
+    "openai-agents>=0.3.0",
+    "openinference-instrumentation-openai-agents>=2.4.1",
 ]
 
 [dependency-groups]

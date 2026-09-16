@@ -1402,8 +1402,10 @@ dependencies = [
     { name = "langchain-openai" },
     { name = "langgraph" },
     { name = "openai" },
+    { name = "openai-agents" },
     { name = "openinference-instrumentation-langchain" },
     { name = "openinference-instrumentation-openai" },
+    { name = "openinference-instrumentation-openai-agents" },
     { name = "opentelemetry-instrumentation-fastapi" },
     { name = "pydantic-settings" },
     { name = "uvicorn" },
@@ -1425,8 +1427,10 @@ requires-dist = [
     { name = "langchain-openai", specifier = ">=1.6.2" },
     { name = "langgraph", specifier = ">=1.2.11" },
     { name = "openai", specifier = ">=3.13.0" },
+    { name = "openai-agents", specifier = ">=0.3.0" },
     { name = "openinference-instrumentation-langchain", specifier = ">=0.1.67" },
     { name = "openinference-instrumentation-openai", specifier = ">=0.1.60" },
+    { name = "openinference-instrumentation-openai-agents", specifier = ">=2.4.1" },
     { name = "opentelemetry-instrumentation-fastapi", specifier = ">=0.65b0" },
     { name = "pydantic-settings", specifier = ">=2.15.0" },
     { name = "uvicorn", specifier = ">=0.53.0" },
@@ -1690,6 +1694,24 @@ wheels = [
 ]
 
 [[package]]
+name = "openai-agents"
+version = "0.22.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "griffelib" },
+    { name = "mcp" },
+    { name = "openai" },
+    { name = "pydantic" },
+    { name = "requests" },
+    { name = "typing-extensions" },
+    { name = "websockets" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/51/a4/b9996e8044b53eab2d78f1ebb37e77f74dea316b3d9a53fdeab3e1c83314/openai_agents-0.22.2.tar.gz", hash = "sha256:12e22d8e8468c097856d664ca82fe8a0298c3c666cfdcf2a6e03c950df93b45b", size = 6552876, upload-time = "2026-09-09T12:37:25.939Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ef/77/ee12f3de6449f3cd50cba76fb9ddee1d5992e608e3b8739106371334ab04/openai_agents-0.22.2-py3-none-any.whl", hash = "sha256:685ae918878be4cf52b62d9c732a6d7b8fae7b634268945a20e1a6d2107bd31e", size = 1144460, upload-time = "2026-09-09T12:37:23.612Z" },
+]
+
+[[package]]
 name = "openapi-pydantic"
 version = "0.5.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1749,6 +1771,24 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e4/e7/ddbbcb5aa626d85168771e1cc265cd1774504d2b886c81506e2cb7a3b5f4/openinference_instrumentation_openai-0.1.60.tar.gz", hash = "sha256:cb4686794310e289a6d2597a967aa3ac0fe9c9a00ee709bac343c87393e36309", size = 24821, upload-time = "2026-09-10T05:43:16.408Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/82/6c/d214a1c2e824bf1febc21d3299030fec51b9db4e239348f5454cd20a1e7f/openinference_instrumentation_openai-0.1.60-py3-none-any.whl", hash = "sha256:06abb10514354dda9b772ab3e75bc1fbeff09dbba413d22305008ab42f7f50fa", size = 32461, upload-time = "2026-09-10T05:43:15.273Z" },
+]
+
+[[package]]
+name = "openinference-instrumentation-openai-agents"
+version = "2.4.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "openinference-instrumentation" },
+    { name = "openinference-semantic-conventions" },
+    { name = "opentelemetry-api" },
+    { name = "opentelemetry-instrumentation" },
+    { name = "opentelemetry-semantic-conventions" },
+    { name = "typing-extensions" },
+    { name = "wrapt" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c7/1a/5493d664baf3893f68c3441b5e7291c2f027f63d3d5d4f58e28389529419/openinference_instrumentation_openai_agents-2.4.1.tar.gz", hash = "sha256:4bcfe61d39ba914b510832096af7030472fbac0df66854bd116f60f67642adee", size = 35334, upload-time = "2026-09-10T05:43:20.312Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/79/08/65ea6e5dd68ba810e33a5c60673764efa65ddb5409807862acb5b3a2504a/openinference_instrumentation_openai_agents-2.4.1-py3-none-any.whl", hash = "sha256:c43857c9738bc785ab482d91644e0dde5be9275e3038a2000b85b3a8e1d38237", size = 38508, upload-time = "2026-09-10T05:43:18.828Z" },
 ]
 
 [[package]]

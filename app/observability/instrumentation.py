@@ -20,12 +20,10 @@ def instrument_ai(tracer_provider: object) -> None:
     """Instrument LangChain/LangGraph and direct OpenAI activity."""
 
     from openinference.instrumentation.langchain import LangChainInstrumentor
+    from openinference.instrumentation.openai_agents import OpenAIAgentsInstrumentor
 
     LangChainInstrumentor().instrument(tracer_provider=tracer_provider)
-
-    # from openinference.instrumentation.openai import OpenAIInstrumentor
-    #
-    # OpenAIInstrumentor().instrument(tracer_provider=tracer_provider)
+    OpenAIAgentsInstrumentor().instrument(tracer_provider=tracer_provider)
 
 
 @lru_cache

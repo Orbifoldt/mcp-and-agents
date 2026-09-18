@@ -1,13 +1,14 @@
+from collections.abc import Callable
 from functools import lru_cache
 
 from azure.core.credentials import TokenCredential
 from azure.identity import ClientSecretCredential, get_bearer_token_provider
 
+from common.settings import get_settings
+
 
 @lru_cache
 def get_client_secret_credential() -> TokenCredential:
-
-    from common.settings import get_settings
 
     settings = get_settings()
     return ClientSecretCredential(
@@ -16,8 +17,9 @@ def get_client_secret_credential() -> TokenCredential:
         client_secret=settings.azure_npa_client_secret.get_secret_value(),
     )
 
-def create_bearer_token_provider():
+
+def create_bearer_token_provider() -> Callable[[], str]:
     return get_bearer_token_provider(
-            get_client_secret_credential(),
-            "https://cognitiveservices.azure.com/.default",
-        )
+        get_client_secret_credential(),
+        "https://cognitiveservices.azure.com/.default",
+    )

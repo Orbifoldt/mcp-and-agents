@@ -2,7 +2,7 @@ SHELL := /bin/sh
 
 UV ?= uv
 
-.PHONY: help app mcp phoenix-up phoenix-down phoenix-logs lint format-check test check all
+.PHONY: help app mcp phoenix-up phoenix-down phoenix-logs lint format-check type-check test check all
 
 help:
 	@echo "Available targets:"
@@ -13,8 +13,9 @@ help:
 	@echo "  make phoenix-logs Follow Phoenix logs"
 	@echo "  make lint         Run Ruff linting"
 	@echo "  make format-check Check formatting with Ruff"
+	@echo "  make type-check   Run Pyrefly type checking"
 	@echo "  make test         Run tests when tests/ exists"
-	@echo "  make check        Run all linting, formatting, and tests"
+	@echo "  make check        Run all linting, formatting, type checking, and tests"
 
 app:
 	$(UV) run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
@@ -37,6 +38,9 @@ lint:
 format-check:
 	$(UV) run ruff format --check .
 
+type-check:
+	$(UV) run pyrefly check .
+
 test:
 	@if [ -d tests ]; then \
 		$(UV) run pytest; \
@@ -44,6 +48,6 @@ test:
 		echo "No tests/ directory yet; skipping tests."; \
 	fi
 
-check: lint format-check test
+check: lint format-check type-check test
 
 all: check

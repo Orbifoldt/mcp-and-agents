@@ -43,7 +43,6 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     """Return the process-wide application settings instance."""
-
     env_file = Path(os.getenv("SETTINGS_ENV_FILE", DEFAULT_ENV_FILE))
     if not env_file.is_absolute():
         env_file = PROJECT_ROOT / env_file

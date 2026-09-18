@@ -1,5 +1,4 @@
 from functools import lru_cache
-from typing import Any
 
 from agents import Agent, Runner, function_tool
 from agents.mcp import MCPServerStreamableHttp
@@ -37,21 +36,18 @@ def get_model() -> OpenAIChatCompletionsModel:
 @function_tool
 def multiply(a: int, b: int) -> int:
     """Multiply two integers."""
-
     return a * b
 
 
 @function_tool
 def add(a: int, b: int) -> int:
     """Add two integers."""
-
     return a + b
 
 
 @function_tool
 def divide(a: int, b: int) -> float:
     """Divide one integer by another."""
-
     return a / b
 
 

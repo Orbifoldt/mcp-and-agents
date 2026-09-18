@@ -1,18 +1,27 @@
-from functools import lru_cache
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from fastapi import APIRouter
 from langchain.agents import create_agent
 from langchain.mcp import MCPAdapter
 from langchain.messages import HumanMessage, SystemMessage, ToolCall
 from langchain.tools import tool
-from langchain_core.messages import BaseMessage
+from langchain_core.messages import AIMessage
 from langchain_openai import AzureChatOpenAI
 from langgraph.func import entrypoint, task
 from langgraph.graph import add_messages
+from langgraph.graph.message import Messages
 
 from app.azure.auth import create_bearer_token_provider
 from common.settings import get_settings
+
+if TYPE_CHECKING:
+    from langchain.agents.middleware import OutputAgentState
+
+INSTRUCTIONS = (
+    "You are a helpful assistant tasked with performing arithmetic on a set of "
+    "inputs. Answer in a nice English sentence, repeating the question in your "
+    "own words and answering it."
+)
 
 
 def get_chat_model() -> AzureChatOpenAI:
@@ -72,25 +81,19 @@ model_with_tools = model.bind_tools(tools)
 
 
 @task
-def call_llm(message: list[BaseMessage]):
-    return model_with_tools.invoke(
-        [
-            SystemMessage(
-                content="You are a helpful assistant tasked with performing arithmetic on a set of inputs. Answer in a nice english sentence, repeating the question in your own words and answering it in "
-            )
-        ]
-        + message
-    )
+def call_llm(message: Messages) -> AIMessage:
+    # pyrefly: ignore [bad-argument-type]
+    return model_with_tools.invoke([SystemMessage(content=INSTRUCTIONS), *message])
 
 
 @task
-def call_tool(tool_call: ToolCall):
+def call_tool(tool_call: ToolCall) -> Any:  # noqa: ANN401
     tool = tools_by_name[tool_call["name"]]
     return tool.invoke(tool_call)
 
 
 @entrypoint()
-def agent(messages: list[BaseMessage]):
+def agent(messages: Messages) -> Messages:
     model_response = call_llm(messages).result()
 
     while True:
@@ -102,22 +105,19 @@ def agent(messages: list[BaseMessage]):
         messages = add_messages(messages, [model_response, *tool_results])
         model_response = call_llm(messages).result()
 
-    messages = add_messages(messages, [model_response])
-    return messages
+    return add_messages(messages, [model_response])
 
 
 @agent_router_lang_graph.get("")
-def try_agent(q: str) -> Any:
+def try_agent(q: str) -> Any:  # noqa: ANN401
     stream = agent.stream_events([HumanMessage(content=q)], version="v3")
 
     out = list(stream)
-    return out[-1]["params"]["data"][-1].content[0][
-        "text"
-    ]  # Wow, such a nice dev experience
+    return out[-1]["params"]["data"][-1].content[0]["text"]  # Wow, such a nice dev experience
 
 
 @agent_router_lang_graph.get("/mcp")
-async def try_mcp_agent(q: str) -> Any:
+async def try_mcp_agent(q: str) -> Any:  # noqa: ANN401
     the_model = get_chat_model()
     async with MCPAdapter("http://localhost:8001/mcp") as adapter:
         mcp_tools = await adapter.list_tools()
@@ -127,10 +127,9 @@ async def try_mcp_agent(q: str) -> Any:
             tools=mcp_tools,
         )
 
-        initial_msg = SystemMessage(
-            content="You are a helpful assistant tasked with performing arithmetic on a set of inputs. Answer in a nice english sentence, repeating the question in your own words and answering it in "
-        )
-        result = await agent_with_mcp.ainvoke(
-            {"messages": [initial_msg, HumanMessage(content=q)]}
+        initial_msg = SystemMessage(content=INSTRUCTIONS)
+        # pyrefly: ignore [bad-assignment]
+        result: OutputAgentState = await agent_with_mcp.ainvoke(
+            {"messages": [initial_msg, HumanMessage(content=q)]},
         )
         return result

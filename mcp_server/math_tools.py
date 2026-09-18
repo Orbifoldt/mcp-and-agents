@@ -2,6 +2,7 @@ from fastmcp import FastMCP
 
 math_mcp = FastMCP("math")
 
+
 @math_mcp.tool()
 def multiply(a: int, b: int) -> int:
     """Multiply `a` and `b`.

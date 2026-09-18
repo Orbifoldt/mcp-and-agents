@@ -21,6 +21,7 @@ dependencies = [
     "uvicorn>=0.53.0",
     "openai-agents>=0.3.0",
     "openinference-instrumentation-openai-agents>=2.4.1",
+    "deepagents>=0.7.15",
 ]
 
 [dependency-groups]

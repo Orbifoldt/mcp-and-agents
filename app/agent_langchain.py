@@ -2,8 +2,10 @@ from collections.abc import Sequence
 from functools import lru_cache
 from typing import Any
 
+from deepagents import create_deep_agent
 from fastapi import APIRouter
 from langchain.agents import create_agent
+from langchain.agents.middleware import TodoListMiddleware
 from langchain.mcp import MCPAdapter
 from langchain.messages import HumanMessage
 from langchain.tools import BaseTool, tool
@@ -16,6 +18,15 @@ INSTRUCTIONS = (
     "You are a helpful assistant tasked with performing arithmetic on a set of "
     "inputs. Answer in a nice English sentence, repeating the question in your "
     "own words and answering it."
+)
+
+DEEP_AGENT_INSTRUCTIONS = (
+    "You are a helpful assistant tasked with performing arithmetic on a set of "
+    "inputs. Answer in a nice English sentence, repeating the question in your "
+    "own words and answering it."
+    "Make use of tools."
+    "Work methodically. At the beginning, create a todolist of the required "
+    "steps using write_todos tool. After completing each step mark it complete."
 )
 
 
@@ -77,3 +88,15 @@ async def try_mcp_agent(q: str) -> dict:
     async with MCPAdapter("http://localhost:8001/mcp") as adapter:
         mcp_tools = await adapter.list_tools()
         return await _run_agent(q, mcp_tools)
+
+
+@agent_router_langchain.get("/deep")
+async def try_deep_agent(q: str) -> dict:
+    agent = create_deep_agent(
+        model=get_chat_model(),
+        tools=LOCAL_TOOLS,
+        system_prompt=DEEP_AGENT_INSTRUCTIONS,
+        name="deep-arithmetic-assistant",
+        middleware=[TodoListMiddleware()],  # Adds a lot of tokens
+    )
+    return await agent.ainvoke({"messages": [HumanMessage(content=q)]})

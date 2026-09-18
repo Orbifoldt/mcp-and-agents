@@ -38,6 +38,9 @@ lint:
 format-check:
 	$(UV) run ruff format --check .
 
+format:
+	$(UV) run ruff format .
+
 type-check:
 	$(UV) run pyrefly check .
 
@@ -48,6 +51,6 @@ test:
 		echo "No tests/ directory yet; skipping tests."; \
 	fi
 
-check: lint format-check type-check test
+check: lint format type-check test
 
 all: check

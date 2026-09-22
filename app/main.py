@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from app.agent_lang_graph import agent_router_lang_graph
 from app.agent_langchain import agent_router_langchain
 from app.agent_openai import agent_router_openai
+from app.agent_strands import agent_router_strands
 from app.azure.openai_client import simple_chat
 from app.observability import configure_observability
 from common.settings import get_settings
@@ -13,6 +14,7 @@ configure_observability(app)
 app.include_router(agent_router_lang_graph)
 app.include_router(agent_router_langchain)
 app.include_router(agent_router_openai)
+app.include_router(agent_router_strands)
 
 
 @app.get("/")

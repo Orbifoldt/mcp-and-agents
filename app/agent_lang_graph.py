@@ -71,7 +71,7 @@ def divide(a: int, b: int) -> float:
     return a / b
 
 
-agent_router_lang_graph = APIRouter(prefix="/agent", tags=["agent"])
+agent_router_lang_graph = APIRouter(prefix="/agent-langgraph", tags=["agent"])
 
 
 model = get_chat_model()

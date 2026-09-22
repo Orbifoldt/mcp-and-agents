@@ -3,6 +3,7 @@ from functools import lru_cache
 from fastapi import FastAPI
 from openinference.instrumentation.langchain import LangChainInstrumentor
 from openinference.instrumentation.openai_agents import OpenAIAgentsInstrumentor
+from openinference.instrumentation.strands_agents import StrandsAgentsToOpenInferenceProcessor
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.trace import TracerProvider
 
@@ -26,7 +27,7 @@ def instrument_ai(tracer_provider: object) -> None:
 @lru_cache
 def configure_observability(application: FastAPI) -> None:
     """Configure all enabled observability for a FastAPI application."""
-    tracer_provider = get_phoenix_tracer_provider()
+    tracer_provider = get_phoenix_tracer_provider(StrandsAgentsToOpenInferenceProcessor())
     if tracer_provider is None:
         return
 

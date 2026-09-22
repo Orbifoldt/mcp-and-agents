@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from openai import AzureOpenAI
+from openai import AsyncAzureOpenAI, AzureOpenAI
 
 from app.azure.auth import create_bearer_token_provider
 from common.settings import get_settings
@@ -14,6 +14,16 @@ def get_openai_client() -> AzureOpenAI:
         azure_endpoint=settings.llm_endpoint,
         api_version=settings.gpt_5_6_luna.api_version,
         azure_ad_token_provider=create_bearer_token_provider(),
+    )
+
+@lru_cache
+def get_async_openai_client() -> AsyncAzureOpenAI:
+    settings = get_settings()
+    
+    return AsyncAzureOpenAI(
+      azure_endpoint=settings.llm_endpoint,
+      api_version=settings.gpt_5_6_luna.api_version,
+      azure_ad_token_provider=create_bearer_token_provider(),
     )
 
 

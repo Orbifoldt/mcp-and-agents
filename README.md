@@ -50,3 +50,4 @@ Has various endpoints for the different frameworks:
   - `GET /agent-strands?q=<question>`
   - `GET /agent-strands/full-history?q=<question>` (showing how you could potentially access the full LLM conversation, not just the final message)
   - `GET /agent-strands/mcp?q=<question>`
+- Crew: did not support `mcp` 2.0, so skipped it
